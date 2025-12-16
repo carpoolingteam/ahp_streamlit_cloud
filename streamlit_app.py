@@ -124,7 +124,8 @@ with st.form("survey_form"):
 
     st.markdown("---")
     # --- Likert ---
-    st.subheader("2) Yol Arkadaşı Tercihleri (5’li Likert)")
+    st.subheader("2) Yol Arkadaşı Tercihleriniz")
+    st.caption("Her ifadenin size ne kadar uyduğunu işaretleyiniz.")
     st.markdown('<div id="likert-scope">', unsafe_allow_html=True)
 
     likert_prompts = [
@@ -159,14 +160,14 @@ with st.form("survey_form"):
 
     # --- AHP: kriterlerin ikili karşılaştırması (slider) ---
     st.markdown("---")
-    st.subheader("3) AHP: Kriterlerin İkili Karşılaştırması")
+    st.subheader("3) Kriterleri Kıyaslayın ve Önem Derecesini Seçin")
 
     st.caption(
-        "Her satırda iki kriteri kıyaslayın. Kaydırma çubuğunu kullanarak hangisinin daha önemli "
-        "olduğunu ve önem derecesini seçin.\n"
+        "Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu "
+        "hem de ne kadar daha önemli olduğunu seçin.\n"
         "- Ortadaki **1**: İki kriter eşit derecede önemli\n"
-        "- Soldaki büyük değerler (**9'a doğru**): Sol kriter daha önemli\n"
-        "- Sağdaki büyük değerler (**9'a doğru**): Sağ kriter daha önemli"
+        "- Solda **2–9**: Sol kriter daha önemli (sayı büyüdükçe fark artar)\n"
+        "- Sağda **2–9**: Sağ kriter daha önemli (sayı büyüdükçe fark artar)"
     )
 
     pairwise_entries = []
@@ -279,11 +280,11 @@ if submitted:
                 else:
                     r = requests.post(WEB_APP_URL, data=payload, timeout=10)
                 if r.status_code == 200:
-                    st.success("Yanıt Google Sheets'e gönderildi (Web App).")
+                    st.success("Yanıtlarınız kaydedildi. Katılımınız için teşekkürler.")
                 else:
                     st.warning(f"Web App cevap kodu: {r.status_code}. Detay: {r.text[:200]}")
             except Exception as e:
-                st.error(f"Web App gönderimi başarısız: {e}")
+                st.error(f"Yanıtlarınız kaydedilemedi!: {e}")
 
 
 
