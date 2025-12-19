@@ -263,7 +263,8 @@ if submitted:
         }
 
         # Likert kayıtları
-        for i in range(1, 8):
+        # Likert kayıtları (Q sayısını otomatik al)
+        for i in range(1, len(likert_prompts) + 1):
             opt = likert_answers[f"Q{i}_opt"]
             row[f"Q{i}"] = int(LIKERT_MAP[opt])
             row[f"Q{i}_label"] = opt
