@@ -136,6 +136,8 @@ with st.form("survey_form"):
         "Araç içinde birlikte seyahat edeceğim kişilerin **benzer meslek/çalışan düzeyinde** olmasını tercih ederim.",
         "Araç içinde birlikte seyahat edeceğim kişilerin **sigara kullanmıyor** olmasını tercih ederim.",
         "Araç içinde birlikte seyahat edeceğim kişilerin **benzer müzik zevkine** sahip olmasını tercih ederim.",
+        "Araç içinde birlikte seyahat edeceğim kişilerin **dakik** olmasını tercih ederim.",
+        "Araç içinde birlikte seyahat edeceğim kişilerin yolculuk sırasında **sessiz olmasını** tercih ederim."
     ]
 
     likert_answers = {}
