@@ -15,10 +15,10 @@ WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxom9lOJI1PT4dsKchrTCi-v2
 SEND_AS_JSON = True     # JSON gönder (önerilir)
 
 st.set_page_config(page_title="Araç İçi Sosyal Uyum Anketi", page_icon="🧭", layout="wide")
-st.title("Araç İçi Sosyal Uyum AnketiZZZZZZZ  denmeee")
+st.title("Araç İçi Sosyal Uyum Anketi ")
 st.caption("📝 Bu form, birlikte seyahat edecek kişilerin sosyal uyum tercihlerini anlamaya yöneliktir.")
 
-with st.expander("📌 Anket Hakkında Bilgilendirmeeeeeeee", expanded=True):
+with st.expander("📌 Anket Hakkında Bilgilendirme", expanded=True):
     st.markdown(
         """
 Sayın katılımcılar, bu anket, araç içinde birlikte seyahat edecek kişilerin sosyal uyumunu daha iyi anlamak ve
@@ -70,7 +70,7 @@ st.markdown("""
 RESP_PATH = "../../Downloads/arac_ici_sosyal_uyum_anketi_apps_script/responses.csv"
 LIKERT_OPTIONS = ["Kesinlikle Katılıyorum","Katılıyorum","Kararsızım","Katılmıyorum","Kesinlikle Katılmıyorum"]
 LIKERT_MAP = {"Kesinlikle Katılıyorum":5, "Katılıyorum":4, "Kararsızım":3, "Katılmıyorum":2, "Kesinlikle Katılmıyorum":1}
-
+cluster_CRITERIA = ["Demografik Özellikler","Davranış","Yaşam Tarzı"]
 AHP_CRITERIA = [
     "Cinsiyet",
     "Medeni hâl",
@@ -163,6 +163,81 @@ with st.form("survey_form"):
     # --- AHP: kriterlerin ikili karşılaştırması (slider) ---
     st.markdown("---")
     st.subheader("3) Kriterleri Kıyaslayın ve Önem Derecesini Seçin")
+
+    st.caption(
+        "Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu "
+        "hem de ne kadar daha önemli olduğunu seçin.\n"
+        "- Ortadaki **1**: İki kriter eşit derecede önemli\n"
+        "- Solda **2–9**: Sol kriter daha önemli (sayı büyüdükçe fark artar)\n"
+        "- Sağda **2–9**: Sağ kriter daha önemli (sayı büyüdükçe fark artar\n)"
+         "Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
+        "Davranış: dakiklik, saygı, sessizlik vb.\n"
+        "Yaşam tarzı: sigara kullanımı, müzik tercihleri vb.")
+
+    pairwise_entries = []
+    display_values = ["9L", "8L", "7L", "6L", "5L", "4L", "3L", "2L", "1", "2R", "3R", "4R", "5R", "6R", "7R", "8R",
+                      "9R"]
+    labels = ["9", "8", "7", "6", "5", "4", "3", "2", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+    n = len(cluster_CRITERIA)
+    for i in range(n):
+        for j in range(i + 1, n):
+            left = cluster_CRITERIA[i]
+            right = cluster_CRITERIA[j]
+
+            st.markdown(
+                "<div style='padding:0.4rem 0.6rem; border-radius:6px; "
+                "border:1px solid #eee; margin-bottom:0.6rem;'>",
+                unsafe_allow_html=True,
+            )
+            st.markdown(f"**{left}** ile **{right}** arasında önem karşılaştırması:", unsafe_allow_html=True)
+
+            c_left, c_slider, c_right = st.columns([1.5, 6, 1.5])
+            with c_left:
+                st.markdown(f"<div style='text-align:left; font-weight:600;'>{left}</div>", unsafe_allow_html=True)
+
+            with c_slider:
+                selected = st.select_slider(
+                    f"ahp_{i}_{j}",
+                    options=display_values,
+                    value="1",
+                    format_func=lambda x: labels[display_values.index(x)],
+                    key=f"ahp_{i}_{j}",
+                    label_visibility="collapsed",
+                )
+
+                numbers_html = "<div style='display:flex; justify-content:space-between; " \
+                               "font-size:0.75rem; color:#666; margin-top:2px;'>"
+                for lab in labels:
+                    numbers_html += f"<span style='flex:1; text-align:center;'>{lab}</span>"
+                numbers_html += "</div>"
+                st.markdown(numbers_html, unsafe_allow_html=True)
+
+            with c_right:
+                st.markdown(f"<div style='text-align:right; font-weight:600;'>{right}</div>", unsafe_allow_html=True)
+
+            if selected == "1":
+                preferred = "Eşit"
+                ratio = 1
+            elif selected.endswith("L"):
+                preferred = left
+                ratio = int(selected[:-1])
+            else:
+                preferred = right
+                ratio = int(selected[:-1])
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+            pairwise_entries.append({
+                "left": left,
+                "right": right,
+                "raw_value": selected,
+                "preferred": preferred,
+                "ratio": ratio,
+            })
+
+    st.markdown("---")
+    st.subheader("4) Kriterleri Kıyaslayın ve Önem Derecesini Seçin")
 
     st.caption(
         "Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu "
