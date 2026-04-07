@@ -18,7 +18,7 @@ st.set_page_config(page_title="Araç İçi Sosyal Uyum Anketi", page_icon="🧭"
 st.title("Araç İçi Sosyal Uyum AnketiZZZZZZZ  denmeee")
 st.caption("📝 Bu form, birlikte seyahat edecek kişilerin sosyal uyum tercihlerini anlamaya yöneliktir.")
 
-with st.expander("📌 Anket Hakkında Bilgilendirme", expanded=True):
+with st.expander("📌 Anket Hakkında Bilgilendirmeeeeeeee", expanded=True):
     st.markdown(
         """
 Sayın katılımcılar, bu anket, araç içinde birlikte seyahat edecek kişilerin sosyal uyumunu daha iyi anlamak ve
