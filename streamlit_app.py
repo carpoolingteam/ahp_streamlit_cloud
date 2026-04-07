@@ -199,12 +199,14 @@ with st.form("survey_form"):
                 st.markdown(f"<div style='text-align:left; font-weight:600;'>{left}</div>", unsafe_allow_html=True)
 
             with c_slider:
+
+
                 selected = st.select_slider(
-                    f"ahp_{i}_{j}",
+                    f"cluster_ahp_{i}_{j}",
                     options=display_values,
                     value="1",
                     format_func=lambda x: labels[display_values.index(x)],
-                    key=f"ahp_{i}_{j}",
+                    key=f"cluster_ahp_{i}_{j}",
                     label_visibility="collapsed",
                 )
 
@@ -279,6 +281,7 @@ with st.form("survey_form"):
                     key=f"ahp_{i}_{j}",
                     label_visibility="collapsed",
                 )
+
 
                 numbers_html = "<div style='display:flex; justify-content:space-between; " \
                                "font-size:0.75rem; color:#666; margin-top:2px;'>"
