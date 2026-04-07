@@ -168,7 +168,7 @@ with st.form("survey_form"):
         "- Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
         "- Davranış: dakiklik, saygı, sessizlik vb.\n"
         "- Yaşam tarzı: sigara kullanımı, müzik tercihleri vb.\n"
-        "Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu "
+        "- Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu\n "
         "hem de ne kadar daha önemli olduğunu seçin.\n\n"
         "- Ortadaki **1**: İki kriter eşit derecede önemli\n"
         "- Solda **2–9**: Sol kriter daha önemli (sayı büyüdükçe fark artar)\n"
