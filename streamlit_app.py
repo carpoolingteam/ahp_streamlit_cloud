@@ -170,9 +170,9 @@ with st.form("survey_form"):
         "- Ortadaki **1**: İki kriter eşit derecede önemli\n"
         "- Solda **2–9**: Sol kriter daha önemli (sayı büyüdükçe fark artar)\n"
         "- Sağda **2–9**: Sağ kriter daha önemli (sayı büyüdükçe fark artar\n)"
-         "Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
-        "Davranış: dakiklik, saygı, sessizlik vb.\n"
-        "Yaşam tarzı: sigara kullanımı, müzik tercihleri vb.")
+         "- Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
+        "- Davranış: dakiklik, saygı, sessizlik vb.\n"
+        "- Yaşam tarzı: sigara kullanımı, müzik tercihleri vb.")
 
     pairwise_entries = []
     display_values = ["9L", "8L", "7L", "6L", "5L", "4L", "3L", "2L", "1", "2R", "3R", "4R", "5R", "6R", "7R", "8R",
