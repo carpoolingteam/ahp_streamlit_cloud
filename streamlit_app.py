@@ -170,7 +170,7 @@ with st.form("survey_form"):
         "- Ortadaki **1**: İki kriter eşit derecede önemli\n"
         "- Solda **2–9**: Sol kriter daha önemli (sayı büyüdükçe fark artar)\n"
         "- Sağda **2–9**: Sağ kriter daha önemli (sayı büyüdükçe fark artar\n)"
-         "- Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
+        "- Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
         "- Davranış: dakiklik, saygı, sessizlik vb.\n"
         "- Yaşam tarzı: sigara kullanımı, müzik tercihleri vb.")
 
