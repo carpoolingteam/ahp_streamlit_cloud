@@ -15,7 +15,7 @@ WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxom9lOJI1PT4dsKchrTCi-v2
 SEND_AS_JSON = True     # JSON gönder (önerilir)
 
 st.set_page_config(page_title="Araç İçi Sosyal Uyum Anketi", page_icon="🧭", layout="wide")
-st.title("Araç İçi Sosyal Uyum Anketi")
+st.title("Araç İçi Sosyal Uyum AnketiZZZZZZZ")
 st.caption("📝 Bu form, birlikte seyahat edecek kişilerin sosyal uyum tercihlerini anlamaya yöneliktir.")
 
 with st.expander("📌 Anket Hakkında Bilgilendirme", expanded=True):
