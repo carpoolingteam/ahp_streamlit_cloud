@@ -61,6 +61,12 @@ comparison_sections = [
         ],
     },
     {
+        "title": "**Davranış** kriteri hangisini ne derecede etkiler?",
+        "pairs": [
+            ("Demografik", "Yaşam Tarzı"),
+        ],
+    },
+    {
         "title": "**Pozisyon** kriteri hangisini daha çok etkiler?",
         "pairs": [
             ("Dakiklik", "Sessizlik"),
