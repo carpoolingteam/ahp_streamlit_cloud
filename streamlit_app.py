@@ -165,14 +165,13 @@ with st.form("survey_form"):
     st.subheader("3) Kriterleri Kıyaslayın ve Önem Derecesini Seçin")
 
     st.caption(
-        "- Demografik özellikler: yaş, cinsiyet, eğitim vb.\n"
-        "- Davranış: dakiklik, saygı, sessizlik vb.\n"
-        "- Yaşam tarzı: sigara kullanımı, müzik tercihleri vb.\n"
-        "- Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu\n "
-        "hem de ne kadar daha önemli olduğunu seçin.\n\n"
-        "- Ortadaki **1**: İki kriter eşit derecede önemli\n"
-        "- Solda **2–9**: Sol kriter daha önemli (sayı büyüdükçe fark artar)\n"
-        "- Sağda **2–9**: Sağ kriter daha önemli (sayı büyüdükçe fark artar)\n"
+        "- Demografik özellikler: yaş, cinsiyet, eğitim, medeni hal, pozisyon\n"
+        "- Davranış: dakiklik, sessizlik \n"
+        "- Yaşam tarzı: sigara kullanımı, müzik tercihleri \n"
+        "- Her satırda iki kriteri karşılaştırın. Kaydırma çubuğuyla hem hangisinin daha önemli olduğunu "
+        "hem de ne kadar daha önemli olduğunu seçin: "
+        "ortadaki **1** eşit önem; sola doğru **2–9** sol kriter daha önemli; "
+        "sağa doğru **2–9** sağ kriter daha önemli (sayı büyüdükçe fark artar)."
 
     )
 
@@ -256,6 +255,9 @@ with st.form("survey_form"):
     labels = ["9","8","7","6","5","4","3","2","1","2","3","4","5","6","7","8","9"]
 
     n = len(AHP_CRITERIA)
+
+    st.markdown(f"Yaşı veya ait olduğu nesil (genç, orta yaş, ileri yaş gibi) sabitken,eğitim düzeyi ile medeni halden hangisi daha etkilidir?", unsafe_allow_html=True)
+
     for i in range(n):
         for j in range(i+1, n):
             left = AHP_CRITERIA[i]
