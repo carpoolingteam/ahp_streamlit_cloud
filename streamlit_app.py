@@ -53,7 +53,7 @@ LIKERT_MAP = {"Kesinlikle Katılıyorum":5,"Katılıyorum":4,"Kararsızım":3,"K
 # ======= AHP Soru Grupları =======
 comparison_sections = [
     {
-        "title": "Yolcu seçiminde hangi **kriter grubu** daha etkilidir?",
+        "title": "**Demografik** kriteri hangisini ne derecede etkiler?",
         "pairs": [
             ("Demografik", "Yaşam Tarzı"),
             ("Demografik", "Davranış"),
@@ -195,7 +195,7 @@ with st.form("survey_form"):
                 "border:1px solid #eee; margin-bottom:0.6rem;'>",
                 unsafe_allow_html=True,
             )
-            st.markdown(f"**{left}** ile **{right}** arasında önem karşılaştırması:", unsafe_allow_html=True)
+            st.markdown(f"**{left}** mı yoksa **{right}** mı?", unsafe_allow_html=True)
 
             c_left, c_slider, c_right = st.columns([1.5, 6, 1.5])
             with c_left:
