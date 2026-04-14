@@ -161,6 +161,7 @@ with st.form("survey_form"):
     st.markdown('</div>', unsafe_allow_html=True)
 
     # --- AHP: kriterlerin ikili karşılaştırması (slider) ---
+    # --- AHP: kriterlerin ikili karşılaştırması (slider) ---
     st.markdown("---")
     st.subheader("3) Kriterleri Kıyaslayın ve Önem Derecesini Seçin")
 
@@ -172,19 +173,22 @@ with st.form("survey_form"):
         "hem de ne kadar daha önemli olduğunu seçin: "
         "ortadaki **1** eşit önem; sola doğru **2–9** sol kriter daha önemli; "
         "sağa doğru **2–9** sağ kriter daha önemli (sayı büyüdükçe fark artar)."
-
     )
+
+    st.markdown("#### Yolcu seçiminde hangi kriter grubu ne derecede etkiler?")
+
+    cluster_GROUPS = ["Demografik", "Yaşam Tarzı", "Davranış"]
 
     pairwise_entries = []
     display_values = ["9L", "8L", "7L", "6L", "5L", "4L", "3L", "2L", "1", "2R", "3R", "4R", "5R", "6R", "7R", "8R",
                       "9R"]
     labels = ["9", "8", "7", "6", "5", "4", "3", "2", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
-    n = len(cluster_CRITERIA)
+    n = len(cluster_GROUPS)
     for i in range(n):
         for j in range(i + 1, n):
-            left = cluster_CRITERIA[i]
-            right = cluster_CRITERIA[j]
+            left = cluster_GROUPS[i]
+            right = cluster_GROUPS[j]
 
             st.markdown(
                 "<div style='padding:0.4rem 0.6rem; border-radius:6px; "
@@ -198,8 +202,6 @@ with st.form("survey_form"):
                 st.markdown(f"<div style='text-align:left; font-weight:600;'>{left}</div>", unsafe_allow_html=True)
 
             with c_slider:
-
-
                 selected = st.select_slider(
                     f"cluster_ahp_{i}_{j}",
                     options=display_values,
@@ -209,8 +211,10 @@ with st.form("survey_form"):
                     label_visibility="collapsed",
                 )
 
-                numbers_html = "<div style='display:flex; justify-content:space-between; " \
-                               "font-size:0.75rem; color:#666; margin-top:2px;'>"
+                numbers_html = (
+                    "<div style='display:flex; justify-content:space-between; "
+                    "font-size:0.75rem; color:#666; margin-top:2px;'>"
+                )
                 for lab in labels:
                     numbers_html += f"<span style='flex:1; text-align:center;'>{lab}</span>"
                 numbers_html += "</div>"
@@ -238,6 +242,7 @@ with st.form("survey_form"):
                 "preferred": preferred,
                 "ratio": ratio,
             })
+
 
     st.markdown("---")
     st.subheader("4) Kriterleri Kıyaslayın ve Önem Derecesini Seçin")
