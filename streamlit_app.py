@@ -248,6 +248,7 @@ with st.form("survey_form"):
     consent = st.checkbox("Gönüllü olarak katılıyorum ve verdiğim bilgilerin araştırma kapsamında kullanılmasını onaylıyorum.")
     submitted = st.form_submit_button("Gönder", use_container_width=True, type="primary")
 
+
 # ======= Gönderim =======
 if submitted:
     if not consent:
@@ -275,15 +276,8 @@ if submitted:
             row[f"Q{i}"] = int(LIKERT_MAP[opt])
             row[f"Q{i}_label"] = opt
 
-        # AHP — her karşılaştırmayı ayrı sütun olarak kaydet
-        for entry in all_pairwise:
-            col_name = f"AHP_{entry['left']}_vs_{entry['right']}"
-            row[col_name] = entry["raw_value"]
-            row[f"{col_name}_preferred"] = entry["preferred"]
-            row[f"{col_name}_ratio"] = entry["ratio"]
-
-        # Ayrıca toplu JSON
-        row["ahp_all_json"] = json.dumps(all_pairwise, ensure_ascii=False)
+        # AHP — tek JSON sütunu
+        row["ahp_json"] = json.dumps(all_pairwise, ensure_ascii=False)
 
         # Google Sheets'e gönder
         if USE_APPS_SCRIPT and WEB_APP_URL.strip() != "":
@@ -300,5 +294,4 @@ if submitted:
                     st.warning(f"Web App cevap kodu: {r.status_code}. Detay: {r.text[:200]}")
             except Exception as e:
                 st.error(f"Yanıtlarınız kaydedilemedi!: {e}")
-
 st.markdown("---")
