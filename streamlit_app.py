@@ -4,7 +4,25 @@ import streamlit as st
 import pandas as pd
 import os, json, requests
 from datetime import datetime
-
+import numpy as np
+def calc_ahp_cr(matrix):
+    """3x3 AHP matrisi için Tutarlılık Oranı (CR) hesaplar."""
+    n = matrix.shape[0]
+    # Sütun toplamlarına bölerek normalize et
+    col_sums = matrix.sum(axis=0)
+    norm_matrix = matrix / col_sums
+    # Öncelik vektörü (satır ortalaması)
+    priority = norm_matrix.mean(axis=1)
+    # λ_max hesapla
+    weighted = matrix @ priority
+    lambdas = weighted / priority
+    lambda_max = lambdas.mean()
+    # CI ve CR
+    ci = (lambda_max - n) / (n - 1)
+    ri_dict = {1: 0, 2: 0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45, 10: 1.49}
+    ri = ri_dict.get(n, 1.49)
+    cr = ci / ri if ri != 0 else 0
+    return cr, priority
 # --- GÖMÜLÜ AYARLAR ---
 USE_APPS_SCRIPT = True
 WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxom9lOJI1PT4dsKchrTCi-v25SdJODylfNCSOD41ctT7F16s7OgOnK0HWq_LXaOavLOQ/exec"
@@ -75,7 +93,7 @@ comparison_sections = [
     {
         "title": "**Yaş** kriteri hangisini ne derecede etkiler?",
         "pairs": [
-            ("Sigara", "Müzik"),
+            ("Sigara Kullanımı", "Müzik Tercihi"),
             ("Eğitim", "Medeni Hal"),
         ],
     },
@@ -295,3 +313,111 @@ if submitted:
             except Exception as e:
                 st.error(f"Yanıtlarınız kaydedilemedi!: {e}")
 st.markdown("---")
+
+
+
+# ======= AHP Tutarlılık Fonksiyonu =======
+import numpy as np
+
+def calc_ahp_cr(matrix):
+    """3x3 AHP matrisi için Tutarlılık Oranı (CR) hesaplar."""
+    n = matrix.shape[0]
+    # Sütun toplamlarına bölerek normalize et
+    col_sums = matrix.sum(axis=0)
+    norm_matrix = matrix / col_sums
+    # Öncelik vektörü (satır ortalaması)
+    priority = norm_matrix.mean(axis=1)
+    # λ_max hesapla
+    weighted = matrix @ priority
+    lambdas = weighted / priority
+    lambda_max = lambdas.mean()
+    # CI ve CR
+    ci = (lambda_max - n) / (n - 1)
+    ri_dict = {1: 0, 2: 0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45, 10: 1.49}
+    ri = ri_dict.get(n, 1.49)
+    cr = ci / ri if ri != 0 else 0
+    return cr, priority
+
+
+# ======= Gönderim =======
+if submitted:
+    if not consent:
+        st.error("Lütfen katılım onay kutusunu işaretleyiniz.")
+    else:
+        # --- AHP Tutarlılık Kontrolü (ilk soru grubu: 3×3 matris) ---
+        # İlk 3 karşılaştırma → Demografik, Yaşam Tarzı, Davranış
+        group_names = ["Demografik", "Yaşam Tarzı", "Davranış"]
+        n_g = len(group_names)
+        ahp_matrix = np.ones((n_g, n_g))
+
+        for entry in all_pairwise[:3]:  # ilk 3 çift (ilk soru grubuna ait)
+            i = group_names.index(entry["left"])
+            j = group_names.index(entry["right"])
+            val = entry["raw_value"]
+            if val == "1":
+                ahp_matrix[i][j] = 1
+                ahp_matrix[j][i] = 1
+            elif val.endswith("L"):
+                r = int(val[:-1])
+                ahp_matrix[i][j] = r
+                ahp_matrix[j][i] = 1 / r
+            else:
+                r = int(val[:-1])
+                ahp_matrix[i][j] = 1 / r
+                ahp_matrix[j][i] = r
+
+        cr, priority = calc_ahp_cr(ahp_matrix)
+
+        if cr > 0.10:
+            st.error(
+                f"⚠️ Kriter grupları karşılaştırmanız **tutarsız** çıktı (CR = {cr:.3f} > 0.10). "
+                f"Lütfen **3. bölümdeki** ilk üç karşılaştırmayı (Demografik, Yaşam Tarzı, Davranış) "
+                f"gözden geçirip tekrar doldurunuz."
+            )
+            st.info(
+                "💡 **Tutarlılık nedir?** Örneğin A, B'den önemliyse ve B, C'den önemliyse, "
+                "A'nın C'den de önemli olması beklenir. Aksi takdirde tutarsızlık oluşur."
+            )
+        else:
+            # Tutarlı → kaydet
+            row = {
+                "timestamp": datetime.now().isoformat(timespec="seconds"),
+                "gender": gender,
+                "marital": marital,
+                "age_range": age,
+                "education": edu,
+                "position": position,
+                "smoking": smoking,
+                "music": "; ".join(music) if music else "",
+                "punctuality_late": int(LIKERT_MAP[punctuality_opt]),
+                "punctuality_score": 6 - int(LIKERT_MAP[punctuality_opt]),
+                "punctuality_label": punctuality_opt,
+                "silence": int(LIKERT_MAP[silence_opt]),
+                "silence_label": silence_opt,
+                "ahp_cr": round(cr, 4),
+            }
+
+            # Likert
+            for i in range(1, len(likert_prompts) + 1):
+                opt = likert_answers[f"Q{i}_opt"]
+                row[f"Q{i}"] = int(LIKERT_MAP[opt])
+                row[f"Q{i}_label"] = opt
+
+            # AHP — tek JSON sütunu
+            row["ahp_json"] = json.dumps(all_pairwise, ensure_ascii=False)
+
+            # Google Sheets'e gönder
+            if USE_APPS_SCRIPT and WEB_APP_URL.strip() != "":
+                try:
+                    payload = row.copy()
+                    if SEND_AS_JSON:
+                        headers = {"Content-Type": "application/json"}
+                        r = requests.post(WEB_APP_URL, headers=headers, data=json.dumps(payload), timeout=10)
+                    else:
+                        r = requests.post(WEB_APP_URL, data=payload, timeout=10)
+                    if r.status_code == 200:
+                        st.success(f"✅ Yanıtlarınız kaydedildi (CR = {cr:.3f}). Katılımınız için teşekkürler.")
+                    else:
+                        st.warning(f"Web App cevap kodu: {r.status_code}. Detay: {r.text[:200]}")
+                except Exception as e:
+                    st.error(f"Yanıtlarınız kaydedilemedi!: {e}")
