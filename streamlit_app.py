@@ -267,52 +267,7 @@ with st.form("survey_form"):
     submitted = st.form_submit_button("Gönder", use_container_width=True, type="primary")
 
 
-# ======= Gönderim =======
-if submitted:
-    if not consent:
-        st.error("Lütfen katılım onay kutusunu işaretleyiniz.")
-    else:
-        row = {
-            "timestamp": datetime.now().isoformat(timespec="seconds"),
-            "gender": gender,
-            "marital": marital,
-            "age_range": age,
-            "education": edu,
-            "position": position,
-            "smoking": smoking,
-            "music": "; ".join(music) if music else "",
-            "punctuality_late": int(LIKERT_MAP[punctuality_opt]),
-            "punctuality_score": 6 - int(LIKERT_MAP[punctuality_opt]),
-            "punctuality_label": punctuality_opt,
-            "silence": int(LIKERT_MAP[silence_opt]),
-            "silence_label": silence_opt,
-        }
 
-        # Likert
-        for i in range(1, len(likert_prompts) + 1):
-            opt = likert_answers[f"Q{i}_opt"]
-            row[f"Q{i}"] = int(LIKERT_MAP[opt])
-            row[f"Q{i}_label"] = opt
-
-        # AHP — tek JSON sütunu
-        row["ahp_json"] = json.dumps(all_pairwise, ensure_ascii=False)
-
-        # Google Sheets'e gönder
-        if USE_APPS_SCRIPT and WEB_APP_URL.strip() != "":
-            try:
-                payload = row.copy()
-                if SEND_AS_JSON:
-                    headers = {"Content-Type": "application/json"}
-                    r = requests.post(WEB_APP_URL, headers=headers, data=json.dumps(payload), timeout=10)
-                else:
-                    r = requests.post(WEB_APP_URL, data=payload, timeout=10)
-                if r.status_code == 200:
-                    st.success("Yanıtlarınız kaydedildi. Katılımınız için teşekkürler.")
-                else:
-                    st.warning(f"Web App cevap kodu: {r.status_code}. Detay: {r.text[:200]}")
-            except Exception as e:
-                st.error(f"Yanıtlarınız kaydedilemedi!: {e}")
-st.markdown("---")
 
 
 
